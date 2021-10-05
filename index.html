@@ -4,26 +4,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body onload="main()">
-    <canvas id="myCanvas" width="750" height="500" style="border: 1px solid black;">
-
-    </canvas>
-    <!-- <script type="notjs" id="fragmentShaderCode">
-        precision mediump float;
-        varying vec3 v_Color;
-        void main(){
-            gl_FragColor = vec4(v_Color, 1.0);
+    <title>tugas 1</title>
+    <script src="main.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+        <style>
+       h3,
+        h2 {
+            text-align: center;
+            font-family: 'Open Sans', sans-serif;
         }
+        canvas {
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            width: 900px;
+        }
+    </style>
+</head>
+
+<body onload="main()">
+    <h2>Tugas 1 - Menggambar Objek dengan WebGL </h2>
+    <h3>Tampak Atas dan Tampak Samping</h3>
+    <canvas id="myCanvas" width="900" height="500"  style="border: 1.5px solid black; ">
+    </canvas>
+    <script type="notjs" id="fragmentShaderCode">
+        precision mediump float;
+        varying vec3 vColor;
+          void main(){
+            gl_FragColor = vec4(vColor, 1.0);
+         }
     </script>
     <script type="notjs" id="vertexShaderCode">
-        attribute vec2 a_Position;
+        attribute vec2 aPosition;
+        attribute vec3 aColor;
+        varying vec3 vColor;
+        uniform mat4 u_matrix;
         void main(){
-            gl_Position = vec4(a_Position, 0.0, 1.0);
-            gl_PointSize = 20.0;
+            gl_Position = u_matrix *vec4(aPosition, 0.0, 1.0);
+            vColor = aColor;
         }
-    </script> -->
+    </script>
 </body>
-</html>
 </html>
