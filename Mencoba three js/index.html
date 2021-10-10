@@ -9,11 +9,10 @@
 </body>
 </html>
 
-
 <script>  
         let move_array = [];
         let scene, camera, renderer, 
-        cube, sphere,sphere2,
+        cube, sphere,sphere2,torusKnot,
         tetrahedron, torus,plane,cylinder,wrcube,
         ambientLights,HemLight,dirLight,pointLightspotLight ;  
 
@@ -23,7 +22,7 @@
         let floorplane=function(){
             plane = new THREE.Mesh(
             new THREE.PlaneGeometry(18,10, 10,10),
-            new THREE.MeshBasicMaterial({map: loader.load('./img/txt2.jpg'), wireframe:false}));
+            new THREE.MeshBasicMaterial({map: loader.load('./img/flo2.jpg'), wireframe:false}));
             plane.rotation.x -= Math.PI / 2; // Rotate the floor 90 degrees
             scene.add(plane);
         }
@@ -31,7 +30,7 @@
             let radius = 1.5;  
             let detail = 0;  
             let geometry = new THREE.TetrahedronGeometry(radius, detail);
-            let material= new THREE.MeshBasicMaterial({color: "rgb(250, 237, 203)"});
+            let material= new THREE.MeshPhongMaterial({color: "rgb(125, 79, 109)", shininess: 150});
             tetrahedron = new THREE.Mesh( geometry, material);
             scene.add(tetrahedron);
         }   
@@ -44,7 +43,7 @@
         }
         let wireCube=function (){ //material : texture
             let geometry = new THREE.BoxGeometry(2,2,2);
-            let material= new THREE.MeshBasicMaterial({color: "rgb(250, 237, 203)",wireframe :true});
+            let material= new THREE.MeshPhongMaterial({color: "rgb(71, 89, 93)"});
             wrcube = new THREE.Mesh( geometry, material);
             scene.add(wrcube);
             console.log("boxsucceed");
@@ -57,7 +56,7 @@
         }
         let createSphere2= function(){
             let geometry = new THREE.SphereGeometry( 1,6,8 );
-            let material = new THREE.MeshBasicMaterial({color:  "rgb(101,128,91)", transparent : true, opacity : 0.8} );
+            let material = new THREE.MeshStandardMaterial({color:  "rgb(101,128,91)", roughness : 0.5,metalness: 0.5} );
             sphere2 = new THREE.Mesh( geometry, material );
             scene.add( sphere2 );
         //     sphere.position.set(100,100,100);
@@ -77,36 +76,37 @@
             cylinder = new THREE.Mesh( geometry, material )
             scene.add( cylinder )
         }
+        let crTorusKnot=function(){
+            const geometry = new THREE.TorusKnotGeometry( 1, 0.3, 100, 16 );
+            const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+            const torusKnot = new THREE.Mesh( geometry, material );
+            scene.add( torusKnot );
+        }
         let lightings=function(){
             //ambient light
-            const ambientLights = new THREE.AmbientLight(000 );
+            const ambientLights = new THREE.AmbientLight(0xffffff );
             scene.add( ambientLights );
             //hemisphere
-            const HemLight = new THREE.HemisphereLight( 0000, 0x080820, 1 );
+            const HemLight = new THREE.HemisphereLight( 0000, 0x080820, 2 );
             scene.add( HemLight );
             //directional
             const dirLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
             scene.add( dirLight );
             //pointlight
             const pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
-            pointLight.position.set( 50, 50, 50 );
+            pointLight.position.set( 1000, 100, 50 );
             scene.add( pointLight );
             //spotlight
-            const spotLight = new THREE.SpotLight( 0xffffff );
-            spotLight.position.set( 500, 1000, 100 );
+            const spotLight = new THREE.SpotLight( 000);
+            spotLight.position.set( 4, 5, 0 );
             spotLight.castShadow = true;
-            spotLight.shadow.mapSize.width = 1024;
-            spotLight.shadow.mapSize.height = 1024;
-            spotLight.shadow.camera.near = 500;
-            spotLight.shadow.camera.far = 4000;
-            spotLight.shadow.camera.fov = 30;
             scene.add( spotLight );
             
         }
         let animation=function(){
             //cube
             cube.rotation.x+= -0.01; //rotate sb y
-            cube.rotation.y+= -0.01; 
+            // cube.rotation.y+= -0.01; 
             cube.position.y=2;
             cube.position.x=-6
             cube.position.z=-2
@@ -115,18 +115,18 @@
             sphere.rotation.y+= -0.03;
             sphere.position.x=-6;
             sphere.position.y=2;
-            sphere.position.z=-2;
+            sphere.position.z=4;
             //sphere biasa
             sphere2.rotation.x+= -0.03; //rotate sb y
             sphere2.rotation.y+= -0.03;
-            sphere2.position.x=-6;
+            sphere2.position.x=6;
             sphere2.position.y=2;
             sphere2.position.z=4;
            //tetra
             tetrahedron.rotation.x+= -0.04; //rotate sb y
             tetrahedron.rotation.y+= -0.04;
             tetrahedron.position.y=2;
-            tetrahedron.position.x=-3
+            tetrahedron.position.x=-6
             tetrahedron.position.z=4;
             //cylinder
             cylinder.rotation.x+= -0.03; //rotate sb y
@@ -138,9 +138,14 @@
             wrcube.rotation.x+= -0.03; //rotate sb y
             wrcube.rotation.y+= -0.03;
             wrcube.position.z=-2
-            wrcube.position.x=0
-             wrcube.position.y=2
+            wrcube.position.x=-6
+            wrcube.position.y=2
+            //ring
+            // ring.position.y = -2
+             //torus
+            //  torus.position.z=2;
         }
+        
         // set up the environment - 
         // initiallize scene, camera, objects and renderer
         let init = function() {
@@ -157,7 +162,10 @@
             createSphere();
             createSphere2();
             createTetra();
-            crTorus();
+            // crTorusKnot(); 
+            
+            // crTorus();
+            // crRing();
             crCylinder();
             wireCube();
             //render            
@@ -208,6 +216,7 @@
             console.log("Hello");
             //animation : rotate
             animation();
+            // torusKnot.position.y=2
             
             // torus.position.x=2
             move();
