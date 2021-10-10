@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <script src="three.min.js"></script>
+</head>
+<body>
+    
+</body>
+</html>
+
+
+<script>  
+//material : texture
+//wireframe :done
+//challenge
+//lighting : done tp ga keliatan?
+        let move_array = [];
+        let scene, camera, renderer, cube, sphere,sphere2,cone,tetrahedron, torus,plane,ambientLights,cylinder,wrcube ;  
+        const loadManager = new THREE.LoadingManager();
+        const loader = new THREE.TextureLoader(loadManager);
+        let floorplane=function(){
+            plane = new THREE.Mesh(
+            new THREE.PlaneGeometry(18,10, 10,10),
+            new THREE.MeshBasicMaterial({map: loader.load('/img/txt2.jpg'), wireframe:false}));
+            plane.rotation.x -= Math.PI / 2; // Rotate the floor 90 degrees
+            scene.add(plane);
+        }
+        let createTetra= function(){
+            let radius = 1.5;  
+            let detail = 0;  
+            let geometry = new THREE.TetrahedronGeometry(radius, detail);
+            let material= new THREE.MeshBasicMaterial({map: loader.load('/img/flo2.jpg')});
+            tetrahedron = new THREE.Mesh( geometry, material);
+            scene.add(tetrahedron);
+        }   
+        let createCube=function (){ //material : texture
+            let geometry = new THREE.BoxGeometry(2,2,2);
+            let material= new THREE.MeshBasicMaterial({color: "rgb(250, 237, 203)", map: loader.load('/img/txt1.jpg')});
+            cube = new THREE.Mesh( geometry, material);
+            scene.add(cube);
+            console.log("boxsucceed");
+        }
+        let wireCube=function (){ //material : texture
+            let geometry = new THREE.BoxGeometry(2,2,2);
+            let material= new THREE.MeshBasicMaterial({color: "rgb(250, 237, 203)",wireframe :true});
+            wrcube = new THREE.Mesh( geometry, material);
+            scene.add(wrcube);
+            console.log("boxsucceed");
+        }
+        let createSphere= function(){
+            let geometry = new THREE.SphereGeometry( 1,6,8 );
+            let material = new THREE.MeshBasicMaterial( {wireframe :true});
+            sphere = new THREE.Mesh( geometry, material );
+            scene.add( sphere );
+        }
+        let createSphere2= function(){
+            let geometry = new THREE.SphereGeometry( 1,6,8 );
+            let material = new THREE.MeshBasicMaterial({color:  "rgb(101,128,91)", transparent : true, opacity : 0.8} );
+            sphere2 = new THREE.Mesh( geometry, material );
+            scene.add( sphere2 );
+        //     sphere.position.set(100,100,100);
+            console.log("sphere succeed");
+        }
+        let crTorus= function(){
+            let geometry = new THREE.TorusGeometry( 1, 0.4, 16, 100 );
+            let material = new THREE.MeshPhongMaterial({
+                        color: 0x0095DD
+                    });
+            let torus = new THREE.Mesh( geometry, material );
+            scene.add( torus );
+        }
+        let crCylinder=function(){
+            var geometry = new THREE.CylinderGeometry(1,1,2)
+            let material = new THREE.MeshBasicMaterial( {color:  "rgb(156,127,230)",wireframe :true})
+            cylinder = new THREE.Mesh( geometry, material )
+            scene.add( cylinder )
+        }
+        let lighting_top=function(){
+            const ambientLights = new THREE.AmbientLight(0x404040 );
+            scene.add( ambientLights );
+        }
+        let animation=function(){
+            const clock= new THREE.Clock(true);
+            // const timeElapsed=clock.getTimeElapsed();
+            //cube
+            cube.rotation.x+= -0.01; //rotate sb y
+            cube.rotation.y+= -0.01; 
+            cube.position.y=2;
+            cube.position.x=-6
+            cube.position.z=-2
+            //sphere wireframe
+            sphere.rotation.x+= -0.03; //rotate sb y
+            sphere.rotation.y+= -0.03;
+            sphere.position.x=-6;
+            sphere.position.y=2;
+            sphere.position.z=-2;
+            //sphere biasa
+            sphere2.rotation.x+= -0.03; //rotate sb y
+            sphere2.rotation.y+= -0.03;
+            sphere2.position.x=-6;
+            sphere2.position.y=2;
+            sphere2.position.z=4;
+           //tetra
+            tetrahedron.rotation.x+= -0.04; //rotate sb y
+            tetrahedron.rotation.y+= -0.04;
+            tetrahedron.position.y=2;
+            tetrahedron.position.x=-3
+            tetrahedron.position.z=4;
+            //cylinder
+            cylinder.rotation.x+= -0.03; //rotate sb y
+            cylinder.rotation.y+= -0.03;
+            cylinder.position.x=5;
+            cylinder.position.y=2
+            cylinder.position.z=-2
+            //wired cube
+            wrcube.rotation.x+= -0.03; //rotate sb y
+            wrcube.rotation.y+= -0.03;
+            wrcube.position.z=-2
+            wrcube.position.x=0
+             wrcube.position.y=2
+        }
+        // set up the environment - 
+        // initiallize scene, camera, objects and renderer
+        let init = function() {
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color("rgb(109,	86	,62)"); //grey
+            //field of view, ratio, jarak terdekat dgn kita, jarak terjauh yg ditampilkan
+            camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight,1, 800);
+            camera.position.z = 14;
+            camera.position.y=4.7;
+                floorplane();
+                createCube();
+                createSphere();
+                createSphere2();
+                createTetra();
+                lighting_top();
+                crTorus();
+                crCylinder();
+                wireCube();
+                // lighting_am();
+            
+            renderer = new THREE.WebGLRenderer();   
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+          
+        };
+        function move () {
+	if ( move_array.length > 0 ) {
+		for ( let i = 0; i < move_array.length; i++ ) {
+			//check: it is object? 
+			if ( move_array[i][0] !== undefined ) {
+				let temp = move_array[i][0];
+				//transform to obj
+				temp.move = {};
+				temp.move.destination = move_array[i][1];
+				temp.move.step = move_array[i][2];
+				temp.move.way = temp.position.distanceTo(temp.move.destination); 
+				move_array[i] = temp;
+			} else {
+				let temp = move_array[i];
+				//check: obj in the end way?
+				if ( temp.move.way >= temp.move.step * 2 ) {
+					//move obj
+					//x
+					if ( temp.position.x > temp.move.destination.x ) temp.position.x -= temp.move.step;
+					if ( temp.position.x < temp.move.destination.x ) temp.position.x += temp.move.step;
+					//y
+					if ( temp.position.y > temp.move.destination.y ) temp.position.y -= temp.move.step;
+					if ( temp.position.y < temp.move.destination.y ) temp.position.y += temp.move.step;
+					//z
+					if ( temp.position.z > temp.move.destination.z ) temp.position.z -= temp.move.step;
+					if ( temp.position.z < temp.move.destination.z ) temp.position.z += temp.move.step;
+					//recount way
+					temp.move.way = temp.position.distanceTo(temp.move.destination); 
+					move_array[i] = temp;
+				} else {
+					//delete obj
+					move_array.splice( i , i + 1 );
+				}
+			}
+		}
+	}
+}
+        // main animation loop - calls 50-60 in a second.
+        let mainLoop = function() {
+            console.log("Hello");
+            //animation : rotate
+            animation();
+            
+            // torus.position.x=2
+            move();
+            move_array.push( [cube, new THREE.Vector3( 5 , 2 ) , 0.05] );
+            move_array.push( [tetrahedron, new THREE.Vector3( 4, 2 , 3 ) , 0.05] );
+           renderer.render(scene, camera);
+            requestAnimationFrame(mainLoop);
+        };
+        
+        ///////////////////////////////////////////////
+        init();
+        mainLoop();
+    </script>
+    
+   
