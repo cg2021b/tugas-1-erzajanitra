@@ -68,6 +68,10 @@
                         color: 0x0095DD
                     });
             let torus = new THREE.Mesh( geometry, material );
+            torus.position.z=-2
+            torus.position.x=2
+            torus.position.y=2
+            // torus.rotation.y+= -0.03
             scene.add( torus );
         }
         let crCylinder=function(){
@@ -77,9 +81,12 @@
             scene.add( cylinder )
         }
         let crTorusKnot=function(){
-            const geometry = new THREE.TorusKnotGeometry( 1, 0.3, 100, 16 );
-            const material = new THREE.MeshBasicMaterial( { color: 0xffff00 } );
+            const geometry = new THREE.TorusKnotGeometry( 1.2, 0.4, 100, 16 );
+            const material = new THREE.MeshBasicMaterial( { color:  "rgb(	162	,196,	201)" } );
             const torusKnot = new THREE.Mesh( geometry, material );
+            torusKnot.position.z=-2
+            torusKnot.position.x=6
+            torusKnot.position.y=2
             scene.add( torusKnot );
         }
         let lightings=function(){
@@ -87,14 +94,14 @@
             const ambientLights = new THREE.AmbientLight(0xffffff );
             scene.add( ambientLights );
             //hemisphere
-            const HemLight = new THREE.HemisphereLight( 0000, 0x080820, 2 );
+            const HemLight = new THREE.HemisphereLight( 0000, 0x080820, 1);
             scene.add( HemLight );
             //directional
             const dirLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
             scene.add( dirLight );
             //pointlight
             const pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
-            pointLight.position.set( 1000, 100, 50 );
+            pointLight.position.set( 100, 100, 50 );
             scene.add( pointLight );
             //spotlight
             const spotLight = new THREE.SpotLight( 000);
@@ -131,7 +138,7 @@
             //cylinder
             cylinder.rotation.x+= -0.03; //rotate sb y
             cylinder.rotation.y+= -0.03;
-            cylinder.position.x=5;
+            cylinder.position.x=-2;
             cylinder.position.y=2
             cylinder.position.z=-2
             //wired cube
@@ -140,6 +147,7 @@
             wrcube.position.z=-2
             wrcube.position.x=-6
             wrcube.position.y=2
+            
             //ring
             // ring.position.y = -2
              //torus
@@ -162,9 +170,9 @@
             createSphere();
             createSphere2();
             createTetra();
-            // crTorusKnot(); 
+            crTorusKnot(); 
             
-            // crTorus();
+            crTorus();
             // crRing();
             crCylinder();
             wireCube();
