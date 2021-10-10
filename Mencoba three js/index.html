@@ -11,18 +11,19 @@
 
 
 <script>  
-//material : texture
-//wireframe :done
-//challenge
-//lighting : done tp ga keliatan?
         let move_array = [];
-        let scene, camera, renderer, cube, sphere,sphere2,cone,tetrahedron, torus,plane,ambientLights,cylinder,wrcube ;  
+        let scene, camera, renderer, 
+        cube, sphere,sphere2,
+        tetrahedron, torus,plane,cylinder,wrcube,
+        ambientLights,HemLight,dirLight,pointLightspotLight ;  
+
         const loadManager = new THREE.LoadingManager();
         const loader = new THREE.TextureLoader(loadManager);
+
         let floorplane=function(){
             plane = new THREE.Mesh(
             new THREE.PlaneGeometry(18,10, 10,10),
-            new THREE.MeshBasicMaterial({map: loader.load('/img/txt2.jpg'), wireframe:false}));
+            new THREE.MeshBasicMaterial({map: loader.load('./img/txt2.jpg'), wireframe:false}));
             plane.rotation.x -= Math.PI / 2; // Rotate the floor 90 degrees
             scene.add(plane);
         }
@@ -30,13 +31,13 @@
             let radius = 1.5;  
             let detail = 0;  
             let geometry = new THREE.TetrahedronGeometry(radius, detail);
-            let material= new THREE.MeshBasicMaterial({map: loader.load('/img/flo2.jpg')});
+            let material= new THREE.MeshBasicMaterial({color: "rgb(250, 237, 203)"});
             tetrahedron = new THREE.Mesh( geometry, material);
             scene.add(tetrahedron);
         }   
         let createCube=function (){ //material : texture
             let geometry = new THREE.BoxGeometry(2,2,2);
-            let material= new THREE.MeshBasicMaterial({color: "rgb(250, 237, 203)", map: loader.load('/img/txt1.jpg')});
+            let material= new THREE.MeshBasicMaterial({color: "rgb(250, 237, 203)", map: loader.load('./img/txt1.jpg')});
             cube = new THREE.Mesh( geometry, material);
             scene.add(cube);
             console.log("boxsucceed");
@@ -76,13 +77,33 @@
             cylinder = new THREE.Mesh( geometry, material )
             scene.add( cylinder )
         }
-        let lighting_top=function(){
-            const ambientLights = new THREE.AmbientLight(0x404040 );
+        let lightings=function(){
+            //ambient light
+            const ambientLights = new THREE.AmbientLight(000 );
             scene.add( ambientLights );
+            //hemisphere
+            const HemLight = new THREE.HemisphereLight( 0000, 0x080820, 1 );
+            scene.add( HemLight );
+            //directional
+            const dirLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            scene.add( dirLight );
+            //pointlight
+            const pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
+            pointLight.position.set( 50, 50, 50 );
+            scene.add( pointLight );
+            //spotlight
+            const spotLight = new THREE.SpotLight( 0xffffff );
+            spotLight.position.set( 500, 1000, 100 );
+            spotLight.castShadow = true;
+            spotLight.shadow.mapSize.width = 1024;
+            spotLight.shadow.mapSize.height = 1024;
+            spotLight.shadow.camera.near = 500;
+            spotLight.shadow.camera.far = 4000;
+            spotLight.shadow.camera.fov = 30;
+            scene.add( spotLight );
+            
         }
         let animation=function(){
-            const clock= new THREE.Clock(true);
-            // const timeElapsed=clock.getTimeElapsed();
             //cube
             cube.rotation.x+= -0.01; //rotate sb y
             cube.rotation.y+= -0.01; 
@@ -129,59 +150,59 @@
             camera = new THREE.PerspectiveCamera(52, window.innerWidth / window.innerHeight,1, 800);
             camera.position.z = 14;
             camera.position.y=4.7;
-                floorplane();
-                createCube();
-                createSphere();
-                createSphere2();
-                createTetra();
-                lighting_top();
-                crTorus();
-                crCylinder();
-                wireCube();
-                // lighting_am();
-            
+            floorplane();
+            lightings();
+            //geometries
+            createCube();
+            createSphere();
+            createSphere2();
+            createTetra();
+            crTorus();
+            crCylinder();
+            wireCube();
+            //render            
             renderer = new THREE.WebGLRenderer();   
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.body.appendChild(renderer.domElement);
           
         };
         function move () {
-	if ( move_array.length > 0 ) {
-		for ( let i = 0; i < move_array.length; i++ ) {
-			//check: it is object? 
-			if ( move_array[i][0] !== undefined ) {
-				let temp = move_array[i][0];
-				//transform to obj
-				temp.move = {};
-				temp.move.destination = move_array[i][1];
-				temp.move.step = move_array[i][2];
-				temp.move.way = temp.position.distanceTo(temp.move.destination); 
-				move_array[i] = temp;
-			} else {
-				let temp = move_array[i];
-				//check: obj in the end way?
-				if ( temp.move.way >= temp.move.step * 2 ) {
-					//move obj
-					//x
-					if ( temp.position.x > temp.move.destination.x ) temp.position.x -= temp.move.step;
-					if ( temp.position.x < temp.move.destination.x ) temp.position.x += temp.move.step;
-					//y
-					if ( temp.position.y > temp.move.destination.y ) temp.position.y -= temp.move.step;
-					if ( temp.position.y < temp.move.destination.y ) temp.position.y += temp.move.step;
-					//z
-					if ( temp.position.z > temp.move.destination.z ) temp.position.z -= temp.move.step;
-					if ( temp.position.z < temp.move.destination.z ) temp.position.z += temp.move.step;
-					//recount way
-					temp.move.way = temp.position.distanceTo(temp.move.destination); 
-					move_array[i] = temp;
-				} else {
-					//delete obj
-					move_array.splice( i , i + 1 );
-				}
-			}
-		}
-	}
-}
+        if ( move_array.length > 0 ) {
+            for ( let i = 0; i < move_array.length; i++ ) {
+                //check: it is object? 
+                if ( move_array[i][0] !== undefined ) {
+                    let temp = move_array[i][0];
+                    //transform to obj
+                    temp.move = {};
+                    temp.move.destination = move_array[i][1];
+                    temp.move.step = move_array[i][2];
+                    temp.move.way = temp.position.distanceTo(temp.move.destination); 
+                    move_array[i] = temp;
+                } else {
+                    let temp = move_array[i];
+                    //check: obj in the end way?
+                    if ( temp.move.way >= temp.move.step * 2 ) {
+                        //move obj
+                        //x
+                        if ( temp.position.x > temp.move.destination.x ) temp.position.x -= temp.move.step;
+                        if ( temp.position.x < temp.move.destination.x ) temp.position.x += temp.move.step;
+                        //y
+                        if ( temp.position.y > temp.move.destination.y ) temp.position.y -= temp.move.step;
+                        if ( temp.position.y < temp.move.destination.y ) temp.position.y += temp.move.step;
+                        //z
+                        if ( temp.position.z > temp.move.destination.z ) temp.position.z -= temp.move.step;
+                        if ( temp.position.z < temp.move.destination.z ) temp.position.z += temp.move.step;
+                        //recount way
+                        temp.move.way = temp.position.distanceTo(temp.move.destination); 
+                        move_array[i] = temp;
+                    } else {
+                        //delete obj
+                        move_array.splice( i , i + 1 );
+                    }
+                }
+            }
+        }
+        }
         // main animation loop - calls 50-60 in a second.
         let mainLoop = function() {
             console.log("Hello");
@@ -192,13 +213,13 @@
             move();
             move_array.push( [cube, new THREE.Vector3( 5 , 2 ) , 0.05] );
             move_array.push( [tetrahedron, new THREE.Vector3( 4, 2 , 3 ) , 0.05] );
-           renderer.render(scene, camera);
+            renderer.render(scene, camera);
             requestAnimationFrame(mainLoop);
         };
         
         ///////////////////////////////////////////////
         init();
         mainLoop();
-    </script>
+</script>
     
    
