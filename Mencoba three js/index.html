@@ -12,7 +12,7 @@
 <script>  
         let move_array = [];
         let scene, camera, renderer, 
-        cube, sphere,sphere2,torusKnot,
+        cube, sphere,sphere2,dodecahedron,
         tetrahedron, torus,plane,cylinder,wrcube,
         ambientLights,HemLight,dirLight,pointLightspotLight ;  
 
@@ -80,32 +80,33 @@
             cylinder = new THREE.Mesh( geometry, material )
             scene.add( cylinder )
         }
-        let crTorusKnot=function(){
-            const geometry = new THREE.TorusKnotGeometry( 1.2, 0.4, 100, 16 );
-            const material = new THREE.MeshBasicMaterial( { color:  "rgb(	162	,196,	201)" } );
-            const torusKnot = new THREE.Mesh( geometry, material );
-            torusKnot.position.z=-2
-            torusKnot.position.x=6
-            torusKnot.position.y=2
-            scene.add( torusKnot );
+        let crDodeca=function(){
+            const geometry = new THREE.DodecahedronGeometry( 1.5 );
+            const material = new THREE.MeshPhongMaterial( { color:  "rgb(20,92,92)" , shininess: 50} );
+            const dodecahedron = new THREE.Mesh( geometry, material );
+            dodecahedron.position.z=-2
+            dodecahedron.position.x=6
+            dodecahedron.position.y=2
+            
+            scene.add( dodecahedron );
         }
         let lightings=function(){
             //ambient light
-            const ambientLights = new THREE.AmbientLight(0xffffff );
+            const ambientLights = new THREE.AmbientLight(0x2a4761);
             scene.add( ambientLights );
             //hemisphere
-            const HemLight = new THREE.HemisphereLight( 0000, 0x080820, 1);
+            const HemLight = new THREE.HemisphereLight( 0000, 0xd2e2d7, 2.5);
             scene.add( HemLight );
-            //directional
-            const dirLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+            //directional : atas
+            const dirLight = new THREE.DirectionalLight( 0000, 0.5);
             scene.add( dirLight );
             //pointlight
-            const pointLight = new THREE.PointLight( 0xff0000, 1, 100 );
-            pointLight.position.set( 10, 100, 50 );
+            const pointLight = new THREE.PointLight( 0xff0000, 2, 20 );
+            pointLight.position.set( 1000, 50, 100 );
             scene.add( pointLight );
             //spotlight
             const spotLight = new THREE.SpotLight( 000);
-            spotLight.position.set( 10, 5, 8);
+            spotLight.position.set( 5, 2, 2);
             spotLight.castShadow = true;
             scene.add( spotLight );
             
@@ -113,7 +114,6 @@
         let animation=function(){
             //cube
             cube.rotation.x+= -0.01; //rotate sb y
-            // cube.rotation.y+= -0.01; 
             cube.position.y=2;
             cube.position.x=-6
             cube.position.z=-2
@@ -133,7 +133,7 @@
             tetrahedron.rotation.x+= -0.04; //rotate sb y
             tetrahedron.rotation.y+= -0.04;
             tetrahedron.position.y=2;
-            tetrahedron.position.x=-6
+            tetrahedron.position.x=-4
             tetrahedron.position.z=4;
             //cylinder
             cylinder.rotation.x+= -0.03; //rotate sb y
@@ -147,11 +147,7 @@
             wrcube.position.z=-2
             wrcube.position.x=-6
             wrcube.position.y=2
-            
-            //ring
-            // ring.position.y = -2
-             //torus
-            //  torus.position.z=2;
+         
         }
         
         // set up the environment - 
@@ -170,7 +166,7 @@
             createSphere();
             createSphere2();
             createTetra();
-            crTorusKnot(); 
+            crDodeca(); 
             
             crTorus();
             // crRing();
