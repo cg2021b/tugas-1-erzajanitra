@@ -66,10 +66,16 @@ function hoverPieces(e) {
     rayCast.setFromCamera(mouse, camera);
     rayCast.setFromCamera(mouse, camera);
     const intersects = rayCast.intersectObjects(scene.children);
-    for (let i = 0; i < intersects.length; i++) {
-      intersects[i].object.material.transparent = true;
-      intersects[i].object.material.opacity = 0.8;
+    if(intersects){
+        for (let i = 0; i < intersects.length; i++) {
+        intersects[i].object.material.transparent = true;
+        intersects[i].object.material.opacity = 0.8;
+        }
     }
+    else{
+         resetMaterials()
+         console.log('unhovered')
+        }
 }
 function resetMaterials(e) {
     for (let i = 0; i < scene.children.length; i++) {
