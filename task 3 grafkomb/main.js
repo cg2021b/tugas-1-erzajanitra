@@ -39,7 +39,7 @@ const removeCube =()=>{
 
     if(cube1==cube2){
         selectedCubes.forEach(object => {
-            console.log('haaiii')
+            console.log('match')
             object.geometry.dispose();
             object.material.dispose();
             scene.remove(object);
@@ -50,11 +50,33 @@ const removeCube =()=>{
         // scores+=1
         // console.log(scores);
     }
-    else if (cube1!=cube2) scores+= unmatch;
-    // if(scores<0) scores=0 //supaya UI scores ga minus
+    else if (cube1!=cube2){
+        scores+= unmatch;
+        console.log('unmatch')
+    }
+    if(scores<0) scores=0 //supaya UI scores ga minus
     scoreElement.innerHTML=scores;
     cubesColor=[];
     selectedCubes=[];
+}
+function hoverPieces(e) {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+    // mouse.z = 1;
+    rayCast.setFromCamera(mouse, camera);
+    rayCast.setFromCamera(mouse, camera);
+    const intersects = rayCast.intersectObjects(scene.children);
+    for (let i = 0; i < intersects.length; i++) {
+      intersects[i].object.material.transparent = true;
+      intersects[i].object.material.opacity = 0.8;
+    }
+}
+function resetMaterials(e) {
+    for (let i = 0; i < scene.children.length; i++) {
+      if (scene.children[i].material) {
+        scene.children[i].material.opacity = scene.children[i].userData.currentSquare == selectedCubes ? 0.5 : 1.0;
+      }
+    }
 }
 
 //event listener : mouse click
@@ -116,6 +138,7 @@ let onMouseClick = function(e) {
         camera.position.set(0, 10, 52);
         
         // if (instructionsElement) instructionsElement.style.display = "none";
+       
         lighting()
         floorplane()
         for(let i = 0; i <30; i++) {
@@ -125,17 +148,21 @@ let onMouseClick = function(e) {
         rayCast = new THREE.Raycaster();
         mouse = new THREE.Vector2();
         mouse.x = mouse.y = -1;
+        // hoverPieces()
         // 4. create the renderer   
         renderer = new THREE.WebGLRenderer();   
         renderer.setSize(window.innerWidth, window.innerHeight);
         
         document.body.appendChild(renderer.domElement);
         document.addEventListener('click', onMouseClick,false);
+        // document.addEventListener('mousemove', hoverPieces,false);
+        // resetMaterials();
+        // document.addEventListener('mousemove', resetMaterials,false);
     };
    
     
     // main animation loop - calls 50-60 times per second.
-    let speed=0.02,addSpeed=0
+    let speed=0.002,addSpeed=0
     let mainLoop = function() {
         if(scene.children.length>=40){
             //berhenti tambah cube kalau jumlah cube sudah mencapai 40
@@ -144,10 +171,10 @@ let onMouseClick = function(e) {
             scoreElement.innerHTML=scores
         }
         else addSpeed+=speed 
-        if(addSpeed>0.1){
+        if(addSpeed>0.02){
             createGeometry()
             addSpeed=0
-            speed+=0.01
+            speed+=0.002
         }
         const clock= new THREE.Clock();
         const elapsedTime = clock.getElapsedTime()
