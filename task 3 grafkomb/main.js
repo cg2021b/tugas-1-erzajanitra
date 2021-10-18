@@ -12,9 +12,6 @@ let randomInRange = function(from, to) {
     return x + from;
 };
 const colors=[0xe6e6fa, 0xffc0cb,0x649ed2,0x7ca070];   
-const maxArea = 30;
-const minArea = -30;
-const rangeArea = maxArea - minArea;
 
 const createGeometry = () => {
     const random_color= colors[Math.floor(randomInRange(0,4))];
@@ -26,6 +23,7 @@ const createGeometry = () => {
   
     scene.add(cube);
 };
+
 let selectedCubes=[];
 let cubesColor=[];
 //remove cube yg warnanya sama
@@ -138,8 +136,6 @@ let onMouseClick = function(e) {
                         1, 1000);
         camera.position.set(0, 10, 52);
         
-        // if (instructionsElement) instructionsElement.style.display = "none";
-       
         lighting()
         floorplane()
         for(let i = 0; i <30; i++) {
