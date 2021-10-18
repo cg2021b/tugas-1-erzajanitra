@@ -2,12 +2,9 @@
 
 let scene, camera, renderer, light,plane;
 
-
 //score
 let scores=0, match=1, unmatch=-1;
 let scoreElement = document.getElementById("score");
-//UI start game
-// const instructionsElement = document.getElementById("instructions");
 
 //cube management
 let randomInRange = function(from, to) {
@@ -31,7 +28,7 @@ const createGeometry = () => {
 };
 let selectedCubes=[];
 let cubesColor=[];
-//remove cube yg warnannya sama
+//remove cube yg warnanya sama
 const removeCube =()=>{
     let cube1 =selectedCubes[0].material.color.getHex();
     let cube2 =selectedCubes[1].material.color.getHex();
@@ -46,8 +43,7 @@ const removeCube =()=>{
 
         });
         scores+=match;
-        // scores+=1
-        // console.log(scores);
+     
     }
     else if (cube1!=cube2){
         scores+= unmatch;
@@ -111,8 +107,8 @@ let onMouseClick = function(e) {
  } }
 
     let lighting = function(){
-        const skyColor = 0xe5dad7;  // light blue
-        const groundColor = 0x423835;  // brownish orange
+        const skyColor = 0xe5dad7;  
+        const groundColor = 0x423835;  
         const intensity = 1;
         const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
         scene.add(light);
@@ -122,7 +118,7 @@ let onMouseClick = function(e) {
         scene.add( dLight );
     }  
     //UI
-    // const instructionsElement = document.getElementById("instructions");   
+      
     let floorplane=function(){
         plane = new THREE.Mesh(
         new THREE.PlaneGeometry(70,70, 10,10),
@@ -158,12 +154,10 @@ let onMouseClick = function(e) {
         renderer = new THREE.WebGLRenderer();   
         renderer.setSize(window.innerWidth, window.innerHeight);
 	    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.target.set(0,0,0)
         controls.update()
         document.body.appendChild(renderer.domElement);
         document.addEventListener('click', onMouseClick,false);
-        // document.addEventListener('mousemove', hoverPieces,false);
-        // resetMaterials();
-        // document.addEventListener('mousemove', resetMaterials,false);
     };
    
     
