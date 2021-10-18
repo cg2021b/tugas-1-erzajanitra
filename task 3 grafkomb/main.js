@@ -1,7 +1,7 @@
 
 
 let scene, camera, renderer, light,plane;
-let cubes = [];
+
 
 //score
 let scores=0, match=1, unmatch=-1;
@@ -27,7 +27,6 @@ const createGeometry = () => {
     cube.position.x=randomInRange(-30,30)
     cube.position.z=randomInRange(-10,30)
   
-    cubes.push(cube);
     scene.add(cube);
 };
 let selectedCubes=[];
