@@ -1,4 +1,4 @@
-// import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+
 
 let scene, camera, renderer, light,plane;
 let cubes = [];
@@ -126,7 +126,7 @@ let onMouseClick = function(e) {
     // const instructionsElement = document.getElementById("instructions");   
     let floorplane=function(){
         plane = new THREE.Mesh(
-        new THREE.PlaneGeometry(80,80, 10,10),
+        new THREE.PlaneGeometry(70,70, 10,10),
         new THREE.MeshPhongMaterial({color: 0xe7f4f4, wireframe:false, shininess:0.8}));
         plane.rotation.x -= Math.PI / 2; // Rotate the floor 90 degrees
         plane.position.y=-3
@@ -158,7 +158,8 @@ let onMouseClick = function(e) {
         // 4. create the renderer   
         renderer = new THREE.WebGLRenderer();   
         renderer.setSize(window.innerWidth, window.innerHeight);
-        
+	    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.update()
         document.body.appendChild(renderer.domElement);
         document.addEventListener('click', onMouseClick,false);
         // document.addEventListener('mousemove', hoverPieces,false);
