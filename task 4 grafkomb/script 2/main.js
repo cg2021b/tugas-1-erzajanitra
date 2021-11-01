@@ -2,7 +2,6 @@ import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threej
 import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js';
 import {GLTFLoader} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/loaders/GLTFLoader.js';
 
-// yg belum : fog, skybox,reflective 
 function main() {
   const canvas = document.querySelector('#c');
   const renderer = new THREE.WebGLRenderer({canvas});
@@ -23,7 +22,7 @@ function main() {
  
   //fog
   const near = 30;
-  const far = 45;
+  const far = 44;
   const color = 'lightblue';
   scene.fog = new THREE.Fog(color, near, far);
  
@@ -43,20 +42,8 @@ function main() {
     mirrorBall.position.x = -3;
     scene.add(mirrorBall);
 
-    function createCube(color, x) {
-      const geometry = new THREE.SphereGeometry(1.5);
-      const material = new THREE.MeshBasicMaterial({envMap: sphereCamera.renderTarget});
-      const cube = new THREE.Mesh(geometry, material);
-      scene.add(cube);
-      cube.position.x = x;
-      cube.position.y = 8;
-      return cube;
-    }
-   
-    const cubes = [
-      // createCube( 0x44aa88,  -2),
-      // createSphere( 0x44aa88,  2)
-    ];
+    
+    
   }
   {
     //lighting
@@ -138,8 +125,7 @@ function main() {
   }
 
   function render() {
-    // time *= 0.001;
-    if (resizeRendererToDisplaySize(renderer)) {
+     if (resizeRendererToDisplaySize(renderer)) {
       const canvas = renderer.domElement;
       camera.aspect = canvas.clientWidth / canvas.clientHeight;
       camera.updateProjectionMatrix();

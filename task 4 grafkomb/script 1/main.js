@@ -9,8 +9,7 @@ function main() {
   //camera
   const camera = new THREE.PerspectiveCamera(45, 2, 0.1, 100);
   camera.position.set(0, 10, 20);
-  const sphereCamera = new THREE.CubeCamera(1, 1000, 500);
-  sphereCamera.position.set(0, 3, 0);
+  
   //control
   const controls = new OrbitControls(camera, canvas);
   controls.target.set(0,0,0)
@@ -19,31 +18,11 @@ function main() {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('black');
 
-  {
-  
-    //reflective
-    // let sphereMaterial = new THREE.MeshBasicMaterial();
-    // let sphereGeo =  new THREE.SphereGeometry(50);
-    // let sphereMaterial = new THREE.MeshBasicMaterial( {envMap: sphereCamera.renderTarget} );
-    // let mirrorSphere = new THREE.Mesh(sphereGeo, sphereMaterial);
-    // mirrorSphere.position.set(5, 0, 0);
-    // scene.add(mirrorSphere);
-    // scene.add(sphereCamera);
+   {
     
-  }
-  
-  {
-    	
-    // scene.fog = new THREE.FogExp2(0xfff, 0.5);
     //shadow
-    const skyColor = 0xB1E1FF;  // light blue
-    const groundColor = 0xB97A20;  // brownish orange
-    const intensity1 = 0.1;
-    const light = new THREE.HemisphereLight(skyColor, groundColor, intensity1);
-    // scene.add(light);
-
     const color = 0xFFFFFF;
-    const intensity = 0.3;
+    const intensity = 0.5;
     const lightDir = new THREE.DirectionalLight(color, intensity);
     lightDir.position.set(5, 10, 2);
     scene.add(lightDir);
@@ -54,6 +33,7 @@ function main() {
     lightDir.shadow.camera.far = 500; // default
   }
 
+ 
   
 
   function frameArea(sizeToFitOnScreen, boxSize, boxCenter, camera) {
@@ -80,6 +60,7 @@ function main() {
     const gltfLoader = new GLTFLoader();
     gltfLoader.load('/task 4 grafkomb/neko/scene.gltf', (gltf) => {
     const root = gltf.scene;
+    // root.position.x=10;
     scene.add(root);
     
     const box = new THREE.Box3().setFromObject(root);
@@ -115,7 +96,6 @@ function main() {
     }
 
     renderer.render(scene, camera);
-    // sphereCamera.update( renderer, scene );
     requestAnimationFrame(render);
   }
 
